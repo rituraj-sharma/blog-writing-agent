@@ -33,7 +33,3 @@ class BlogState(TypedDict, total=False): #total=False means every key in the Typ
     # output
     final: str
     output_path: str
-
-
-
-

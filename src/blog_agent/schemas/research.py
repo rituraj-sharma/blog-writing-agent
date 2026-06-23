@@ -17,7 +17,7 @@ class EvidenceItem(BaseModel):
     title: str
     url: str
     published_at: str | None = None  # ISO date, optional
-    snipped: str | None = None
+    snippet: str | None = None
     source: str | None = None
 
 class EvidencePack(BaseModel):
