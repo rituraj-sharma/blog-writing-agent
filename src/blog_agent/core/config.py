@@ -15,18 +15,21 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
+    # output directory to save markdown blog file and images
+    output_dir: str = "output"
+
     # Provider and Model
     llm_provider: Provider = "groq"
     llm_model: str = "llama-3.3-70b-versatile"
     llm_temperature: float = 0.3
 
-    # Search settings
+    # Search settings (For guardrailing)
     research_max_queries: int = 10              # Max number of queries to search (actual number and queries given by Router)
     research_max_results_per_query: int = 6     # Max number of results fetched by search engine
     research_max_results_total: int = 20        # Only keep top N search for evidence
     research_max_evidences_total: int = 20      # ceiling after ranking (consumer budget)
     research_score_floor: float = 0.4           # drop results below this relevance
-    research_snippet_max_chars: int = 800       # truncate each result's content
+    research_snippet_max_chars: int = 500       # truncate each result's content
 
     recency_open_book_days: int = 7             # Open-book mainly used for news volatile/news topics, only keep evidence from the last 7 days
     recency_hybrid_days: int = 45               # Evergreen concepts that need some up-to-date examples. 45 days is looser than news but still recent
