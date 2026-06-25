@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 from langchain_core.messages import HumanMessage, SystemMessage
+from blog_agent.core import get_settings
 from blog_agent.llm import get_llm
 from blog_agent.prompts import ORCHESTRATOR_PROMPT
 from blog_agent.schemas import BlogState, Plan
 
 def orchestrator_node(state: BlogState) -> dict:
+    settings = get_settings()
     mode = state.get("mode", "closed_book")
     evidence = state.get("evidence", []) or [] # or [] for evidence=None
     forced_kind = mode == "open_book"
@@ -14,7 +16,8 @@ def orchestrator_node(state: BlogState) -> dict:
     # evidence_str = str([e.model_dump() for e in evidence][:16])
 
     evidence_str = "\n".join(
-        f"- {e.title} | {e.url} | {e.published_at or 'date:unknown'}" for e in evidence[:20]
+        f"- {e.title} | {e.url} | {e.published_at or 'date:unknown'}" 
+        for e in evidence[:settings.research_max_evidences_total]
     ) or "None"
 
     chain = ORCHESTRATOR_PROMPT | get_llm().with_structured_output(Plan)

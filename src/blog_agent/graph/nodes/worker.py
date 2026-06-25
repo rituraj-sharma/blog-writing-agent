@@ -3,6 +3,7 @@
 from __future__ import annotations
 from langchain_core.output_parsers import StrOutputParser
 from langgraph.types import Send
+from blog_agent.core import get_settings
 from blog_agent.llm import get_llm
 from blog_agent.prompts import WORKER_PROMPT
 from blog_agent.schemas import BlogState, Plan, Task
@@ -30,11 +31,12 @@ def fan_out(state: BlogState) -> list[Send]:
 # The ** is just the mechanism that feeds the dict's fields into the constructor as keyword arguments.
 
 def worker_node(payload: dict) -> dict:
+    settings = get_settings()
     task = Task(**payload["task"])
     plan = Plan(**payload["plan"])
-
     evidence_text = "\n".join(
-        f"- {e.title} | {e.url} | {e.published_at or 'date:unknown'}" for e in payload["evidence"][:20]
+        f"- {e['title']} | {e['url']} | {e.get('published_at') or 'date:unknown'}"
+        for e in payload["evidence"][:settings.research_max_evidences_total]
     ) or "None"
 
     chain = WORKER_PROMPT | get_llm() | StrOutputParser()

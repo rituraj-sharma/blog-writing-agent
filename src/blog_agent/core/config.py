@@ -20,11 +20,31 @@ class Settings(BaseSettings):
     llm_model: str = "llama-3.3-70b-versatile"
     llm_temperature: float = 0.3
 
+    # Search settings
+    research_max_queries: int = 10              # Max number of queries to search (actual number and queries given by Router)
+    research_max_results_per_query: int = 6     # Max number of results fetched by search engine
+    research_max_results_total: int = 20        # Only keep top N search for evidence
+    research_max_evidences_total: int = 20      # ceiling after ranking (consumer budget)
+    research_score_floor: float = 0.4           # drop results below this relevance
+    research_snippet_max_chars: int = 800       # truncate each result's content
+
+    recency_open_book_days: int = 7             # Open-book mainly used for news volatile/news topics, only keep evidence from the last 7 days
+    recency_hybrid_days: int = 45               # Evergreen concepts that need some up-to-date examples. 45 days is looser than news but still recent
+    recency_closed_book_days: int = 3650        # Effectively no recency limit. Huge number so the same filtering machinery works without if else. 
+
     # Provider API keys
     groq_api_key: str | None = Field(default=None, alias="GROQ_API_KEY")
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     anthropic_api_key: str | None = Field(default=None, alias="ANTHROPIC_API_KEY")
     google_api_key: str | None = Field(default=None, alias="GOOGLE_API_KEY")
+
+    # Search API keys
+    tavily_api_key: str | None = Field(default=None, alias="TAVILY_API_KEY")
+
+    # if the key is missing, research will just return no evidence rather than crashing (tavily is serach by design)
+    @property  # @property enables a function to be called as an attribute like c.tavily_enabled
+    def tavily_enabled(self) -> bool:
+        return bool(self.tavily_api_key)
 
 @lru_cache
 def get_settings() -> Settings:

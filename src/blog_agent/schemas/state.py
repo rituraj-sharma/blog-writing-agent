@@ -14,7 +14,7 @@ class BlogState(TypedDict, total=False): #total=False means every key in the Typ
     
     # Routing / Reserach
     mode: str
-    needs_reserach: bool
+    needs_research: bool
     queries: list[str]
     recency_days: int 
     evidence: list[EvidenceItem]

@@ -28,6 +28,9 @@ Evidence:
 {evidence}
 """
 
+# force_note: force_note is basically a forced blog_kind=news_roundup if mode is open_book
+# This helps the llms to not plan a tutorial blog instaed do a news summary which covers most of the search oriented task
+
 ORCHESTRATOR_PROMPT = ChatPromptTemplate.from_messages([
     ("system", ORCHESTRATOR_SYSTEM),
     ("human", ORCHESTRATOR_HUMAN)

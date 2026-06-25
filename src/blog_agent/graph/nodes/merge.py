@@ -15,5 +15,5 @@ def merge_content_node(state: BlogState) -> dict:
     out_path = Path("output") / "blog.md"
     out_path.write_text(merged, encoding="utf-8")
 
-    return {"merged_md": merged, "out_path": str(out_path)}
+    return {"merged_md": merged, "output_path": str(out_path)}
 

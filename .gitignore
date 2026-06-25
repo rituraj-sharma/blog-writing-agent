@@ -11,3 +11,6 @@ wheels/
 
 # Env & secrets
 .env
+
+# Temp file for debugging
+scratch.py
