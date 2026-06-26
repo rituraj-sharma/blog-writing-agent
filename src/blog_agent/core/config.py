@@ -11,7 +11,7 @@ Provider = Literal["groq", "openai", "anthropic", "google"]
 class Settings(BaseSettings):
     model_config=SettingsConfigDict(
         env_file=".env",
-        env_prefix="BLOG_AGENT",
+        env_prefix="BLOG_AGENT_",
         extra="ignore"
     )
 
@@ -23,11 +23,18 @@ class Settings(BaseSettings):
     llm_model: str = "llama-3.3-70b-versatile"
     llm_temperature: float = 0.3
 
+    # Image generation config
+    images_enabled: bool = True
+    image_provider: Provider = "openai"
+    image_model: str = "gpt-image-1-mini"
+    max_images: int = 3
+
+
     # Search settings (For guardrailing)
-    research_max_queries: int = 10              # Max number of queries to search (actual number and queries given by Router)
-    research_max_results_per_query: int = 6     # Max number of results fetched by search engine
-    research_max_results_total: int = 20        # Only keep top N search for evidence
-    research_max_evidences_total: int = 20      # ceiling after ranking (consumer budget)
+    research_max_queries: int = 5 #10              # Max number of queries to search (actual number and queries given by Router)
+    research_max_results_per_query: int = 3 #6     # Max number of results fetched by search engine
+    research_max_results_total: int = 10 #20        # Only keep top N search for evidence
+    research_max_evidences_total: int = 10 #20      # ceiling after ranking (consumer budget)
     research_score_floor: float = 0.4           # drop results below this relevance
     research_snippet_max_chars: int = 500       # truncate each result's content
 

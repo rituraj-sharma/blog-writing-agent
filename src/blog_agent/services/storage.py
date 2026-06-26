@@ -17,7 +17,9 @@ def safe_slug(title: str) -> str:
 
 class BlogStorage(Protocol):
     def write_markdown(self, title: str, markdown: str) -> Path: ...
-
+    def image_path(self, filename: str) -> Path: ...
+    def image_exists(self, filename: str) -> bool: ...
+    def write_image(self, filename: str, data: bytes) -> Path: ...
 
 class FileSystemStorage:
     def __init__(self, output_dir: Path) -> None:
@@ -29,5 +31,18 @@ class FileSystemStorage:
         path.write_text(markdown, encoding="utf-8")
         return path
     
+    def image_path(self, filename: str) -> Path:
+        return self._output_dir / "images" / filename
+    
+    def image_exists(self, filename: str) -> bool:
+        return self.image_path(filename).exists()
+    
+    def write_image(self, filename: str, data: bytes) -> Path:
+        path = self.image_path(filename)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        return path
+        
+
 def get_storage():
     return FileSystemStorage(output_dir=Path(get_settings().output_dir))

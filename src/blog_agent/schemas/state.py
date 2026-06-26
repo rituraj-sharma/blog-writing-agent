@@ -27,7 +27,7 @@ class BlogState(TypedDict, total=False): #total=False means every key in the Typ
 
     # Reducer / images
     merged_md: str
-    md_with_placeholder: str
+    md_with_placeholders: str
     image_specs: list[dict]
 
     # output

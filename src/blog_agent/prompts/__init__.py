@@ -4,5 +4,12 @@ from blog_agent.prompts.orchestrator import ORCHESTRATOR_PROMPT
 from blog_agent.prompts.worker import WORKER_PROMPT
 from blog_agent.prompts.router import ROUTER_PROMPT
 from blog_agent.prompts.research import RESEARCH_PROMPT
+from blog_agent.prompts.images import DECIDE_IMAGES_PROMPT
 
-__all__ = ["ORCHESTRATOR_PROMPT", "WORKER_PROMPT", "ROUTER_PROMPT", "RESEARCH_PROMPT"]
+__all__ = [
+    "ORCHESTRATOR_PROMPT", 
+    "WORKER_PROMPT", 
+    "ROUTER_PROMPT", 
+    "RESEARCH_PROMPT", 
+    "DECIDE_IMAGES_PROMPT"
+    ]
