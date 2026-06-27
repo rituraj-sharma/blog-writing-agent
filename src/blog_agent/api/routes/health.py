@@ -1,3 +1,5 @@
+"""Liveness/readiness endpoint."""
+
 from fastapi import APIRouter
 from blog_agent import __version__
 from blog_agent.api.models import HealthResponse

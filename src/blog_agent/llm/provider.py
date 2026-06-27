@@ -5,7 +5,7 @@ Swapping providers (OpenAI → Anthropic → a local model) or changing defaults
 from __future__ import annotations
 from functools import lru_cache
 from langchain_core.language_models.chat_models import BaseChatModel
-from blog_agent.core.config import get_settings
+from blog_agent.core import get_settings
 
 @lru_cache
 def get_llm(temperature: float | None = None) -> BaseChatModel:

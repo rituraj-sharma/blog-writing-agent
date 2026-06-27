@@ -5,7 +5,9 @@ Generates the images based on the given Provider option
 
 from __future__ import annotations
 from typing import Protocol
-from blog_agent.core import get_settings
+from blog_agent.core import get_settings, get_logger
+
+logger = get_logger(__name__)
 
 class ImageGenerationError(Exception):
     pass
@@ -76,13 +78,14 @@ class OpenAIImageService:
 
 
 def get_image_service() -> ImageService:
-    s = get_settings()
-    if not s.images_enabled:
+    settings = get_settings()
+    if not settings.images_enabled:
         return NullImageService()
 
-    if s.image_provider == "openai" and s.openai_api_key:
-        return OpenAIImageService(api_key=s.openai_api_key, model=s.image_model)
-    if s.image_provider == "gemini" and s.google_api_key:
-        return GeminiImageService(api_key=s.google_api_key, model=s.image_model)
-
+    if settings.image_provider == "openai" and settings.openai_api_key:
+        return OpenAIImageService(api_key=settings.openai_api_key, model=settings.image_model)
+    if settings.image_provider == "gemini" and settings.google_api_key:
+        return GeminiImageService(api_key=settings.google_api_key, model=settings.image_model)
+    
+    logger.info("image_service.disabled", images_enabled=settings.images_enabled)
     return NullImageService()   # no key for chosen provider → graceful degradation

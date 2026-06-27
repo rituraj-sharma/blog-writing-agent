@@ -52,6 +52,10 @@ class Settings(BaseSettings):
     # Search API keys
     tavily_api_key: str | None = Field(default=None, alias="TAVILY_API_KEY")
 
+    # logging configuration
+    log_level: str = "INFO"
+    log_json: bool = False
+
     # if the key is missing, research will just return no evidence rather than crashing (tavily is serach by design)
     @property  # @property enables a function to be called as an attribute like c.tavily_enabled
     def tavily_enabled(self) -> bool:

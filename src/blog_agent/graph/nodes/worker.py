@@ -3,10 +3,13 @@
 from __future__ import annotations
 from langchain_core.output_parsers import StrOutputParser
 from langgraph.types import Send
-from blog_agent.core import get_settings
+from blog_agent.core import get_settings, get_logger
 from blog_agent.llm import get_llm
 from blog_agent.prompts import WORKER_PROMPT
 from blog_agent.schemas import BlogState, Plan, Task
+
+logger = get_logger(__name__)
+
 
 def fan_out(state: BlogState) -> list[Send]:
     plan = state["plan"]
@@ -61,6 +64,7 @@ def worker_node(payload: dict) -> dict:
         "evidence": evidence_text
     }).strip()
 
+    logger.info("worker.section", task_id=task.id, title=task.title)
     return {"sections": [(task.id, section_md)]}
 
 

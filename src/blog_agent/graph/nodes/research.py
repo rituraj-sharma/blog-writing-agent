@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 from datetime import date, timedelta
-from blog_agent.core import get_settings
+from blog_agent.core import get_settings, get_logger
 from blog_agent.llm import get_llm
 from blog_agent.prompts import RESEARCH_PROMPT
 from blog_agent.schemas import BlogState, EvidencePack
 from blog_agent.services import get_search_service
 from urllib.parse import urlparse
 
+logger = get_logger(__name__)
 
 def _iso_to_date(s: str | None) -> date | None:
     try:
@@ -27,7 +28,9 @@ def research_node(state: BlogState) -> dict:
     raw: list[dict] = []
     for q in queries:
         raw.extend(search.search(q, settings.research_max_results_per_query, recent=is_news))
-    if not raw: return {"evidence": []}
+    if not raw: 
+        logger.info("research.empty", failure_stage = "no raw results")
+        return {"evidence": []}
 
     # Dedup by url (keep the higher-scoring duplicate).
     by_url: dict[str, dict] = {}
@@ -53,6 +56,7 @@ def research_node(state: BlogState) -> dict:
         } for r in top_content]
 
     if not compact_content:
+        logger.info("research.empty", failure_stage = "no compact results")
         return {"evidence": []}
 
     chain = RESEARCH_PROMPT | get_llm().with_structured_output(EvidencePack)
@@ -67,5 +71,6 @@ def research_node(state: BlogState) -> dict:
     if is_news:
         cutoff = date.fromisoformat(state["as_of"]) - timedelta(days=int(state["recency_days"]))
         evidence = [e for e in evidence if (d := _iso_to_date(e.published_at)) and d >= cutoff]
+    logger.info("research.done", n_evidence=len(evidence))
     return {"evidence": evidence}
 

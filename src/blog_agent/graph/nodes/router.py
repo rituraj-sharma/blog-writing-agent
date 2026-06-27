@@ -1,10 +1,12 @@
 """Router node: decide whether to research and in which mode."""
 
 from __future__ import annotations
-from blog_agent.core.config import get_settings
+from blog_agent.core import get_settings, get_logger
 from blog_agent.llm import get_llm
 from blog_agent.prompts import ROUTER_PROMPT
 from blog_agent.schemas import RouterDecision, BlogState
+ 
+logger = get_logger(__name__)
 
 
 def router_node(state: BlogState) -> dict:
@@ -23,6 +25,13 @@ def router_node(state: BlogState) -> dict:
         "hybrid": settings.recency_hybrid_days
     }.get(decision.mode, settings.recency_closed_book_days)
 
+    logger.info(
+        "router.decision",
+        mode=decision.mode,
+        needs_research=decision.needs_research,
+        n_queries=len(decision.queries),
+    )
+    
     return {
         "needs_research": decision.needs_research,
         "mode": decision.mode,

@@ -1,11 +1,15 @@
 """Orchestrator node: turn topic + evidence into a structured Plan."""
 
 from __future__ import annotations
+
 from langchain_core.messages import HumanMessage, SystemMessage
-from blog_agent.core import get_settings
+
+from blog_agent.core import get_settings, get_logger
 from blog_agent.llm import get_llm
 from blog_agent.prompts import ORCHESTRATOR_PROMPT
 from blog_agent.schemas import BlogState, Plan
+
+logger = get_logger(__name__)
 
 def orchestrator_node(state: BlogState) -> dict:
     settings = get_settings()
@@ -31,5 +35,7 @@ def orchestrator_node(state: BlogState) -> dict:
     })
 
     if forced_kind: plan.blog_kind = "news_roundup"
+
+    logger.info("orchestrator.plan", title=plan.blog_title, n_tasks=len(plan.tasks))
     return {"plan": plan}
 
