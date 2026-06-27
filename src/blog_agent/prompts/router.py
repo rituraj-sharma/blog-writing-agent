@@ -9,7 +9,7 @@ Modes:
 - open_book (needs_research=true): volatile weekly/news/"latest"/pricing/policy.
 
 If needs_research=true:
-- Output 3–10 high-signal, scoped queries.
+- Output {min_q}–{max_q} high-signal, scoped queries.
 - For open_book weekly roundup, include queries reflecting last 7 days.
 """
 

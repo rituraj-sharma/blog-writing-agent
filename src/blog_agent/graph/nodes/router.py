@@ -11,6 +11,8 @@ def router_node(state: BlogState) -> dict:
     settings = get_settings()
     chain = ROUTER_PROMPT | get_llm().with_structured_output(RouterDecision)
     decision: RouterDecision = chain.invoke({
+        "min_q": settings.research_min_queries,
+        "max_q": settings.research_max_queries,
         "topic": state["topic"],
         "as_of": state["as_of"],
     })

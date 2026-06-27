@@ -31,6 +31,7 @@ class Settings(BaseSettings):
 
 
     # Search settings (For guardrailing)
+    research_min_queries: int = 3
     research_max_queries: int = 5 #10              # Max number of queries to search (actual number and queries given by Router)
     research_max_results_per_query: int = 3 #6     # Max number of results fetched by search engine
     research_max_results_total: int = 10 #20        # Only keep top N search for evidence
